@@ -1,0 +1,266 @@
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body { margin: 0; padding: 0; }
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+:focus-visible { outline: 2px solid var(--border-strong); outline-offset: 2px; }
+
+::selection { background: var(--foreground); color: var(--background); }
+
+/* ---- spec voice ---------------------------------------------------------- */
+
+.spec {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muted-foreground);
+}
+
+.spec strong { color: var(--foreground); font-weight: 700; }
+
+/* ---- the caret: the only ambient animation -------------------------------- */
+
+.caret::after {
+  content: "_";
+  margin-left: 0.08em;
+  color: var(--foreground);
+  animation: caret-blink var(--caret-rate, 1s) steps(1) infinite;
+}
+@keyframes caret-blink { 50% { opacity: 0; } }
+
+/* ---- board: gridded paper + corner crop marks ----------------------------- */
+
+.board {
+  position: relative;
+  min-height: 100vh;
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 0 1.25rem 4rem;
+  background:
+    linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0 / 100% 6.25rem,
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 0 0 / 6.25rem 100%;
+}
+
+.board::before, .board::after {
+  content: "";
+  position: absolute;
+  width: 14px; height: 14px;
+  border: 1px solid var(--grid-node);
+  pointer-events: none;
+}
+.board::before { top: 10px; left: 10px; border-width: 0 1px 1px 0; }
+.board::after { bottom: 10px; right: 10px; border-width: 1px 0 0 1px; }
+
+/* ---- chrome: statusline + hint bar ---------------------------------------- */
+
+.statusline {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  gap: 0.75rem;
+  align-items: baseline;
+  padding: 0.9rem 0;
+  background: var(--background);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.statusline .mode { color: var(--foreground); font-weight: 700; }
+.statusline .sep { opacity: 0.35; }
+
+.hintbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  display: flex;
+  gap: 1.25rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 0.5rem 1rem;
+  background: var(--background);
+  border-top: 1px solid var(--border);
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  color: var(--muted-foreground);
+}
+
+.hintbar kbd {
+  font: inherit;
+  color: var(--foreground);
+  border: 1px solid var(--border);
+  padding: 0 0.3em;
+  margin-right: 0.35em;
+}
+
+/* ---- surfaces -------------------------------------------------------------- */
+
+.sheet {
+  background: var(--card);
+  color: var(--card-foreground);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.25rem;
+}
+
+.rule { border-top: 1px solid var(--border); }
+
+button {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  text-align: left;
+}
+
+button:not(:disabled):hover { border-color: var(--border-strong); }
+
+/* ---- home ------------------------------------------------------------------ */
+
+.home-head { padding: 3rem 0 2rem; }
+
+.home-title {
+  margin: 0;
+  font-size: clamp(2.2rem, 6vw + 0.5rem, 4rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 0.75rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.cat-grid .sheet {
+  display: block;
+  width: 100%;
+  padding: 1rem 1.1rem;
+}
+
+.cat-grid .cat-label { font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; }
+.cat-grid .cat-desc { color: var(--muted-foreground); font-size: 0.8125rem; margin-top: 0.25rem; }
+.cat-grid .cat-key { float: right; color: var(--muted-foreground); }
+
+.stats-foot {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  align-items: baseline;
+}
+
+.stat-error { color: var(--foreground); font-weight: 700; }
+
+/* ---- round ------------------------------------------------------------------ */
+
+.round { display: grid; gap: 1rem; padding-top: 1.5rem; }
+
+.codeblock {
+  font-size: 1rem;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  overflow-x: auto;
+  margin: 0;
+}
+
+.round .context {
+  color: var(--muted-foreground);
+  font-size: 0.8125rem;
+  margin: 0;
+  white-space: pre-wrap;
+}
+
+.prompt-line { font-weight: 700; letter-spacing: 0.06em; margin: 0; }
+
+/* ---- options ------------------------------------------------------------------ */
+
+.options { display: grid; gap: 0.5rem; margin: 0; padding: 0; list-style: none; }
+
+.options button {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.6rem 0.8rem;
+  width: 100%;
+  white-space: pre-wrap;
+}
+
+.options .opt-key { color: var(--muted-foreground); }
+.options .opt-correct { font-weight: 700; border-color: var(--border-strong); }
+.options .opt-wrong { opacity: 0.45; text-decoration: line-through; }
+
+/* ---- typed input ------------------------------------------------------------------ */
+
+.typed-input {
+  font: inherit;
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  background: transparent;
+  color: var(--foreground);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius);
+}
+
+.typed-input:focus { outline: none; border-color: var(--foreground); }
+.typed-input::placeholder { color: var(--muted-foreground); }
+
+/* ---- feedback ------------------------------------------------------------------ */
+
+.feedback { margin: 0; }
+.feedback .verdict { font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; }
+.feedback.miss .verdict, .feedback.miss { color: var(--muted-foreground); }
+.feedback .explain { color: var(--muted-foreground); display: block; }
+
+.flash-ok { animation: flash var(--flash-ms) steps(1); }
+.flash-miss { animation: flash var(--flash-ms) steps(1); }
+@keyframes flash { 0% { opacity: 0; } }
+
+/* ---- jinj2 highlighter: grayscale classes -------------------------------------- */
+
+.hl-delim { font-weight: 700; }
+.hl-kw { font-weight: 700; }
+.hl-str { opacity: 0.72; }
+.hl-num { font-weight: 700; }
+.hl-filt, .hl-test { text-decoration: underline; text-underline-offset: 3px; }
+.hl-text { opacity: 0.55; }
+
+/* ---- a11y ---------------------------------------------------------------------- */
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .caret::after { animation: none; }
+}

@@ -1,0 +1,37 @@
+/* JINJA2 DOJO — strict grayscale token contract.
+   Dark default; [data-theme="light"] flips to paper.
+   Distinction is weight/opacity/underline only — no hue anywhere. */
+
+:root {
+  color-scheme: dark;
+  --background: #08090b;
+  --foreground: #f9fbfb;
+  --card: #0e0f12;
+  --card-foreground: #f9fbfb;
+  --muted: #22242b;
+  --muted-foreground: #818694;
+  --border: rgb(249 251 251 / 20%);
+  --border-strong: rgb(249 251 251 / 45%);
+  --grid-line: rgb(249 251 251 / 5%);
+  --grid-node: rgb(249 251 251 / 22%);
+  --ok: #f9fbfb;
+  --miss: #f9fbfb;
+  --radius: 0;
+  --font-mono: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --caret-rate: 1s;
+  --flash-ms: 150ms;
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --background: #f5f5f5;
+  --foreground: #090b0c;
+  --card: #ffffff;
+  --card-foreground: #090b0c;
+  --muted: #ececec;
+  --muted-foreground: #74747a;
+  --border: rgb(9 11 12 / 20%);
+  --border-strong: rgb(9 11 12 / 45%);
+  --grid-line: rgb(9 11 12 / 5%);
+  --grid-node: rgb(9 11 12 / 22%);
+}
