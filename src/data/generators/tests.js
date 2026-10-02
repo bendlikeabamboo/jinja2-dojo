@@ -1,12 +1,14 @@
-import { mcCore, typedCore, nounOf } from './common.js'
+import { makeRender, nounOf } from './common.js'
 
-const render = (rng, kind, core) => (kind === 'mc' ? mcCore(rng, { ...core, category: 'tests' }) : typedCore({ ...core, category: 'tests' }))
+export const CATEGORY = { id: 'tests', label: 'Tests & Operators', desc: 'is defined, divisibleby, in, and / or / not' }
+
+const render = makeRender(CATEGORY.id)
 
 // Jinja renders booleans Python-style: True / False.
 const T = 'True'
 const F = 'False'
 
-function genDefined(rng, kind) {
+export function genDefined(rng, kind) {
   const name = nounOf(rng)
   return render(rng, kind, {
     difficulty: 1,
@@ -18,7 +20,7 @@ function genDefined(rng, kind) {
   })
 }
 
-function genUndefined(rng, kind) {
+export function genUndefined(rng, kind) {
   const name = nounOf(rng)
   const other = nounOf(rng)
   return render(rng, kind, {
@@ -31,7 +33,7 @@ function genUndefined(rng, kind) {
   })
 }
 
-function genNone(rng, kind) {
+export function genNone(rng, kind) {
   const key = nounOf(rng)
   const isNone = rng.chance(0.5)
   return render(rng, kind, {
@@ -46,7 +48,7 @@ function genNone(rng, kind) {
   })
 }
 
-function genEvenOdd(rng, kind) {
+export function genEvenOdd(rng, kind) {
   const n = rng.int(1, 20)
   const even = rng.chance(0.5)
   const expected = String(n % 2 === (even ? 0 : 1)).replace('true', T).replace('false', F)
@@ -60,7 +62,7 @@ function genEvenOdd(rng, kind) {
   })
 }
 
-function genDivisibleby(rng, kind) {
+export function genDivisibleby(rng, kind) {
   const div = rng.pick([2, 3, 4, 5])
   const multiple = rng.int(1, 6) * div
   const hit = rng.chance(0.6)
@@ -76,7 +78,7 @@ function genDivisibleby(rng, kind) {
   })
 }
 
-function genMapping(rng, kind) {
+export function genMapping(rng, kind) {
   const isMapping = rng.chance(0.5)
   const value = isMapping ? { a: 1 } : [1]
   return render(rng, kind, {
@@ -89,7 +91,7 @@ function genMapping(rng, kind) {
   })
 }
 
-function genTypeTest(rng, kind) {
+export function genTypeTest(rng, kind) {
   const mode = rng.int(1, 3)
   if (mode === 1) {
     const word = nounOf(rng)
@@ -128,7 +130,7 @@ function genTypeTest(rng, kind) {
   })
 }
 
-function genEquality(rng, kind) {
+export function genEquality(rng, kind) {
   const word = nounOf(rng)
   const same = rng.chance(0.5)
   const b = same ? word : nounOf(rng)
@@ -142,7 +144,7 @@ function genEquality(rng, kind) {
   })
 }
 
-function genInList(rng, kind) {
+export function genInList(rng, kind) {
   const basket = rng.shuffle(['tea', 'sake', 'chai'])
   const probe = rng.pick(basket)
   const useNot = rng.chance(0.5)
@@ -159,7 +161,7 @@ function genInList(rng, kind) {
   })
 }
 
-function genAndOr(rng, kind) {
+export function genAndOr(rng, kind) {
   const useOr = rng.chance(0.5)
   const a = rng.chance(0.6)
   const b = rng.chance(0.6)
@@ -174,7 +176,7 @@ function genAndOr(rng, kind) {
   })
 }
 
-function genNot(rng, kind) {
+export function genNot(rng, kind) {
   const done = rng.chance(0.5)
   const expected = done ? F : T
   return render(rng, kind, {
@@ -187,7 +189,7 @@ function genNot(rng, kind) {
   })
 }
 
-function genChained(rng, kind) {
+export function genChained(rng, kind) {
   const has = rng.chance(0.5)
   const items = rng.shuffle(['map', 'reduce', 'scan'])
   const probe = has ? items[0] : 'fold'
@@ -202,17 +204,3 @@ function genChained(rng, kind) {
   })
 }
 
-export const GENERATORS = [
-  genDefined,
-  genUndefined,
-  genNone,
-  genEvenOdd,
-  genDivisibleby,
-  genMapping,
-  genTypeTest,
-  genEquality,
-  genInList,
-  genAndOr,
-  genNot,
-  genChained,
-]

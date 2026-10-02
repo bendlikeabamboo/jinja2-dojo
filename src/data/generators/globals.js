@@ -1,12 +1,14 @@
-import { mcCore, typedCore, nounOf } from './common.js'
+import { makeRender, nounOf } from './common.js'
 
-const render = (rng, kind, core) => (kind === 'mc' ? mcCore(rng, { ...core, category: 'globals' }) : typedCore({ ...core, category: 'globals' }))
+export const CATEGORY = { id: 'globals', label: 'Built-in Globals', desc: 'range, dict, namespace, joiner, ~ concat' }
+
+const render = makeRender(CATEGORY.id)
 
 function seq(nums) {
   return nums.map((n) => `[${n}]`).join('')
 }
 
-function genRangeN(rng, kind) {
+export function genRangeN(rng, kind) {
   const n = rng.int(2, 4)
   const expected = seq([0, 1, 2].slice(0, n))
   return render(rng, kind, {
@@ -19,7 +21,7 @@ function genRangeN(rng, kind) {
   })
 }
 
-function genRangeAB(rng, kind) {
+export function genRangeAB(rng, kind) {
   const a = rng.int(1, 4)
   const b = a + rng.int(2, 4)
   const nums = []
@@ -35,7 +37,7 @@ function genRangeAB(rng, kind) {
   })
 }
 
-function genRangeStep(rng, kind) {
+export function genRangeStep(rng, kind) {
   const a = rng.pick([0, 1])
   const step = rng.pick([2, 3])
   const stop = a + step * rng.int(2, 3) + 1
@@ -52,7 +54,7 @@ function genRangeStep(rng, kind) {
   })
 }
 
-function genRangeReverse(rng, kind) {
+export function genRangeReverse(rng, kind) {
   const n = rng.int(2, 4)
   const nums = []
   for (let i = n; i > 0; i--) nums.push(i)
@@ -67,7 +69,7 @@ function genRangeReverse(rng, kind) {
   })
 }
 
-function genDictGlobal(rng, kind) {
+export function genDictGlobal(rng, kind) {
   const k1 = nounOf(rng)
   const k2 = nounOf(rng)
   const expected = String(rng.int(1, 9))
@@ -81,7 +83,7 @@ function genDictGlobal(rng, kind) {
   })
 }
 
-function genConcat(rng, kind) {
+export function genConcat(rng, kind) {
   const left = nounOf(rng)
   const right = nounOf(rng)
   const expected = left + right
@@ -95,7 +97,7 @@ function genConcat(rng, kind) {
   })
 }
 
-function genConcatNumber(rng, kind) {
+export function genConcatNumber(rng, kind) {
   const word = nounOf(rng)
   const n = rng.int(1, 99)
   const expected = `${word}${n}`
@@ -109,7 +111,7 @@ function genConcatNumber(rng, kind) {
   })
 }
 
-function genConcatLoop(rng, kind) {
+export function genConcatLoop(rng, kind) {
   const a = nounOf(rng)
   const b = nounOf(rng)
   const expected = `r1${a}r2${b}`
@@ -123,7 +125,7 @@ function genConcatLoop(rng, kind) {
   })
 }
 
-function genNamespace(rng, kind) {
+export function genNamespace(rng, kind) {
   const n = rng.int(1, 9)
   const expected = String(n)
   return render(rng, kind, {
@@ -136,7 +138,7 @@ function genNamespace(rng, kind) {
   })
 }
 
-function genJoiner(rng, kind) {
+export function genJoiner(rng, kind) {
   const sep = rng.pick([', ', ' | '])
   const a = nounOf(rng)
   const b = nounOf(rng)
@@ -151,7 +153,7 @@ function genJoiner(rng, kind) {
   })
 }
 
-function genCycler(rng, kind) {
+export function genCycler(rng, kind) {
   const a = rng.pick(['+', '-', '*'])
   const b = rng.pick(['.', '_', '='])
   const expected = a
@@ -165,7 +167,7 @@ function genCycler(rng, kind) {
   })
 }
 
-function genRangeLength(rng, kind) {
+export function genRangeLength(rng, kind) {
   const a = rng.int(0, 3)
   const stop = a + rng.int(3, 6)
   const expected = String(stop - a)
@@ -179,17 +181,3 @@ function genRangeLength(rng, kind) {
   })
 }
 
-export const GENERATORS = [
-  genRangeN,
-  genRangeAB,
-  genRangeStep,
-  genRangeReverse,
-  genDictGlobal,
-  genConcat,
-  genConcatNumber,
-  genConcatLoop,
-  genNamespace,
-  genJoiner,
-  genCycler,
-  genRangeLength,
-]

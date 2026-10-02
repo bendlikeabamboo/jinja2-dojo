@@ -2,8 +2,9 @@ import { NAMES, CITIES, NOUNS } from '../../game/pools.js'
 
 export const MC_PROMPT = 'What does this render?'
 
-// Assemble an MC core: expected + up to 3 unique non-expected distractors,
-// shuffled by the round rng. Fallbacks stay plausible, never garbage.
+// Assemble an MC core: expected + up to 3 unique non-expected distractors.
+// Choices arrive unshuffled; engine.generateRound is the single shuffle authority.
+// Fallbacks stay plausible, never garbage.
 export function mcCore(rng, { category, difficulty, template, context, expected, distractors, explain, prompt }) {
   const seen = new Set([expected])
   const picks = []
@@ -37,7 +38,7 @@ export function mcCore(rng, { category, difficulty, template, context, expected,
     template,
     context,
     prompt: prompt ?? MC_PROMPT,
-    choices: rng.shuffle([expected, ...picks]),
+    choices: [expected, ...picks],
     expected,
     explain,
   }
@@ -54,6 +55,20 @@ export function typedCore({ category, difficulty, template, context, expected, a
     accept,
     explain,
   }
+}
+
+// Per-module render: stamp the module's category id onto every core.
+export const makeRender = (categoryId) => (rng, kind, core) =>
+  kind === 'mc' ? mcCore(rng, { ...core, category: categoryId }) : typedCore({ ...core, category: categoryId })
+
+// Auto-collect generators from a module namespace. Plain gen* named exports
+// matching /^gen[A-Z]/ (functions only) — no hand-maintained arrays. Spec
+// guarantees namespace string keys in ascending code-unit order, so collection
+// order is deterministic (alphabetical) in Node, vitest, and Vite alike.
+export function collectGenerators(ns) {
+  return Object.entries(ns)
+    .filter(([key, value]) => /^gen[A-Z]/.test(key) && typeof value === 'function')
+    .map(([, value]) => value)
 }
 
 export const nameOf = (rng) => rng.pick(NAMES)

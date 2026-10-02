@@ -1,8 +1,10 @@
-import { mcCore, typedCore, nounOf, words } from './common.js'
+import { makeRender, nounOf, words } from './common.js'
 
-const render = (rng, kind, core) => (kind === 'mc' ? mcCore(rng, { ...core, category: 'controlflow' }) : typedCore({ ...core, category: 'controlflow' }))
+export const CATEGORY = { id: 'controlflow', label: 'Control Flow', desc: 'if / elif / else, for loops, loop.index traps' }
 
-function genIfTruthy(rng, kind) {
+const render = makeRender(CATEGORY.id)
+
+export function genIfTruthy(rng, kind) {
   const name = nounOf(rng)
   return render(rng, kind, {
     difficulty: 1,
@@ -14,7 +16,7 @@ function genIfTruthy(rng, kind) {
   })
 }
 
-function genIfEmptyElse(rng, kind) {
+export function genIfEmptyElse(rng, kind) {
   const noun = nounOf(rng)
   const empty = rng.chance(0.5)
   const note = empty ? '' : `the ${noun}`
@@ -29,7 +31,7 @@ function genIfEmptyElse(rng, kind) {
   })
 }
 
-function genIfZero(rng, kind) {
+export function genIfZero(rng, kind) {
   const zeroIsString = rng.chance(0.5)
   const count = zeroIsString ? '0' : 0
   const expected = zeroIsString ? '0 tickets left' : 'sold out'
@@ -45,7 +47,7 @@ function genIfZero(rng, kind) {
   })
 }
 
-function genLadder(rng, kind) {
+export function genLadder(rng, kind) {
   const temp = rng.int(1, 3) * 10 - 5
   const band = temp < 0 ? 'freeze' : temp < 20 ? 'cool' : 'warm'
   const expected = `${temp}C: ${band}`
@@ -59,7 +61,7 @@ function genLadder(rng, kind) {
   })
 }
 
-function genForInline(rng, kind) {
+export function genForInline(rng, kind) {
   const nums = rng.shuffle([rng.int(1, 9), rng.int(10, 19), rng.int(20, 29)])
   const expected = nums.map((n) => `[${n}]`).join('')
   return render(rng, kind, {
@@ -72,7 +74,7 @@ function genForInline(rng, kind) {
   })
 }
 
-function genLoopIndex(rng, kind) {
+export function genLoopIndex(rng, kind) {
   const items = words(rng, 3)
   const zeroBased = rng.chance(0.5)
   const expected = items.map((w, i) => `${zeroBased ? i : i + 1}.${w}`).join('|')
@@ -90,7 +92,7 @@ function genLoopIndex(rng, kind) {
   })
 }
 
-function genLoopFirst(rng, kind) {
+export function genLoopFirst(rng, kind) {
   const items = words(rng, 3)
   const expected = `[${items[0]}]${items[1]}${items[2]}`
   return render(rng, kind, {
@@ -103,7 +105,7 @@ function genLoopFirst(rng, kind) {
   })
 }
 
-function genLoopLength(rng, kind) {
+export function genLoopLength(rng, kind) {
   const n = rng.int(2, 5)
   const items = words(rng, n)
   const expected = `${Array(n).fill(n).join(' ')} of ${n}`
@@ -117,7 +119,7 @@ function genLoopLength(rng, kind) {
   })
 }
 
-function genInlineIf(rng, kind) {
+export function genInlineIf(rng, kind) {
   const done = rng.chance(0.5)
   const yes = 'ready'
   const no = 'waiting'
@@ -132,7 +134,7 @@ function genInlineIf(rng, kind) {
   })
 }
 
-function genDictsort(rng, kind) {
+export function genDictsort(rng, kind) {
   const keys = words(rng, 3)
   const [k1, k2, k3] = keys
   const data = {}
@@ -155,7 +157,7 @@ function genDictsort(rng, kind) {
   })
 }
 
-function genForElse(rng, kind) {
+export function genForElse(rng, kind) {
   const empty = rng.chance(0.5)
   const items = empty ? [] : words(rng, 2)
   const expected = empty ? 'nothing to train' : `drill: ${items[0]}`
@@ -171,7 +173,7 @@ function genForElse(rng, kind) {
   })
 }
 
-function genForFilter(rng, kind) {
+export function genForFilter(rng, kind) {
   const active = words(rng, 2)
   const idle = nounOf(rng)
   const users = [
@@ -190,17 +192,3 @@ function genForFilter(rng, kind) {
   })
 }
 
-export const GENERATORS = [
-  genIfTruthy,
-  genIfEmptyElse,
-  genIfZero,
-  genLadder,
-  genForInline,
-  genLoopIndex,
-  genLoopFirst,
-  genLoopLength,
-  genInlineIf,
-  genDictsort,
-  genForElse,
-  genForFilter,
-]

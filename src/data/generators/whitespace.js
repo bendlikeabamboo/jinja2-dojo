@@ -1,10 +1,12 @@
-import { mcCore, typedCore, nounOf } from './common.js'
+import { makeRender, nounOf } from './common.js'
 
-const render = (rng, kind, core) => (kind === 'mc' ? mcCore(rng, { ...core, category: 'whitespace' }) : typedCore({ ...core, category: 'whitespace' }))
+export const CATEGORY = { id: 'whitespace', label: 'Whitespace Control', desc: '{{- -}} and {%- -%} trims, the newline traps' }
+
+const render = makeRender(CATEGORY.id)
 
 const sp = (n) => ' '.repeat(n)
 
-function genStripLeft(rng, kind) {
+export function genStripLeft(rng, kind) {
   const left = nounOf(rng)
   const right = nounOf(rng)
   const pad = sp(rng.int(1, 4))
@@ -18,7 +20,7 @@ function genStripLeft(rng, kind) {
   })
 }
 
-function genStripRight(rng, kind) {
+export function genStripRight(rng, kind) {
   const left = nounOf(rng)
   const right = nounOf(rng)
   const pad = sp(rng.int(1, 4))
@@ -32,7 +34,7 @@ function genStripRight(rng, kind) {
   })
 }
 
-function genStripBoth(rng, kind) {
+export function genStripBoth(rng, kind) {
   const left = nounOf(rng)
   const mid = nounOf(rng)
   const right = nounOf(rng)
@@ -46,7 +48,7 @@ function genStripBoth(rng, kind) {
   })
 }
 
-function genKeepSpaces(rng, kind) {
+export function genKeepSpaces(rng, kind) {
   const left = nounOf(rng)
   const mid = nounOf(rng)
   const right = nounOf(rng)
@@ -60,7 +62,7 @@ function genKeepSpaces(rng, kind) {
   })
 }
 
-function genBlockNewline(rng, kind) {
+export function genBlockNewline(rng, kind) {
   const word = nounOf(rng)
   return render(rng, kind, {
     difficulty: 2,
@@ -72,7 +74,7 @@ function genBlockNewline(rng, kind) {
   })
 }
 
-function genForNewlines(rng, kind) {
+export function genForNewlines(rng, kind) {
   const a = rng.int(1, 4)
   const b = a + 1
   return render(rng, kind, {
@@ -85,7 +87,7 @@ function genForNewlines(rng, kind) {
   })
 }
 
-function genCommentDefault(rng, kind) {
+export function genCommentDefault(rng, kind) {
   const left = nounOf(rng)
   const right = nounOf(rng)
   return render(rng, kind, {
@@ -98,7 +100,7 @@ function genCommentDefault(rng, kind) {
   })
 }
 
-function genCommentStrip(rng, kind) {
+export function genCommentStrip(rng, kind) {
   const left = nounOf(rng)
   const right = nounOf(rng)
   return render(rng, kind, {
@@ -111,7 +113,7 @@ function genCommentStrip(rng, kind) {
   })
 }
 
-function genSetNewline(rng, kind) {
+export function genSetNewline(rng, kind) {
   const n = rng.int(1, 9)
   return render(rng, kind, {
     difficulty: 3,
@@ -123,7 +125,7 @@ function genSetNewline(rng, kind) {
   })
 }
 
-function genTrimPair(rng, kind) {
+export function genTrimPair(rng, kind) {
   const a = nounOf(rng)
   const b = nounOf(rng)
   return render(rng, kind, {
@@ -136,7 +138,7 @@ function genTrimPair(rng, kind) {
   })
 }
 
-function genIndentKept(rng, kind) {
+export function genIndentKept(rng, kind) {
   const word = nounOf(rng)
   const indent = sp(rng.int(2, 4))
   return render(rng, kind, {
@@ -149,7 +151,7 @@ function genIndentKept(rng, kind) {
   })
 }
 
-function genFusion(rng, kind) {
+export function genFusion(rng, kind) {
   const left = nounOf(rng)
   const mid = nounOf(rng)
   const right = nounOf(rng)
@@ -164,17 +166,3 @@ function genFusion(rng, kind) {
   })
 }
 
-export const GENERATORS = [
-  genStripLeft,
-  genStripRight,
-  genStripBoth,
-  genKeepSpaces,
-  genBlockNewline,
-  genForNewlines,
-  genCommentDefault,
-  genCommentStrip,
-  genSetNewline,
-  genTrimPair,
-  genIndentKept,
-  genFusion,
-]

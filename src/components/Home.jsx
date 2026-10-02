@@ -1,4 +1,4 @@
-import { CATEGORIES } from '../data/categories.js'
+import { CATEGORIES } from '../data/registry.js'
 import { startCategory, requestReset, cancelReset, stats, confirmingReset } from '../game/store.js'
 
 function accuracy(catStats) {
@@ -33,10 +33,10 @@ export function Home() {
         })}
         <li>
           <button class="sheet" onClick={() => startCategory('mixed')}>
-            <span class="cat-key">[6]</span>
+            <span class="cat-key">[{CATEGORIES.length + 1}]</span>
             <span class="cat-label">Mixed</span>
             <span class="cat-desc">
-              weighted draw from all five
+              weighted draw across all drills
               <br />
               {`ACC ${accuracy(s.categories.mixed) || '--'} // GRADED INTO CATEGORIES`}
             </span>

@@ -1,16 +1,52 @@
 import { describe, it, expect } from 'vitest'
 import { generateRound, normalizeText } from '../src/game/engine.js'
 import { Rng } from '../src/game/rng.js'
-import { REGISTRY } from '../src/data/registry.js'
-import { CATEGORIES } from '../src/data/categories.js'
+import { CATEGORIES, REGISTRY } from '../src/data/registry.js'
+import * as filtersNs from '../src/data/generators/filters.js'
+import * as controlflowNs from '../src/data/generators/controlflow.js'
+import * as testsNs from '../src/data/generators/tests.js'
+import * as globalsNs from '../src/data/generators/globals.js'
+import * as whitespaceNs from '../src/data/generators/whitespace.js'
+
+const MODULES = {
+  filters: filtersNs,
+  controlflow: controlflowNs,
+  tests: testsNs,
+  globals: globalsNs,
+  whitespace: whitespaceNs,
+}
 
 const RUNS = 200
 
 describe('category registry integrity', () => {
-  it('has all five categories with 12+ generators each', () => {
+  it('registry keys match categories', () => {
     expect(Object.keys(REGISTRY).sort()).toEqual([...CATEGORIES.map((c) => c.id)].sort())
-    for (const cat of CATEGORIES) {
-      expect(REGISTRY[cat.id].length, cat.id).toBeGreaterThanOrEqual(12)
+  })
+
+  it('category ids are unique', () => {
+    expect(new Set(CATEGORIES.map((c) => c.id)).size).toBe(CATEGORIES.length)
+  })
+
+  for (const cat of CATEGORIES) {
+    it(`${cat.id} is self-describing with a non-empty generator list`, () => {
+      expect(typeof cat.label, cat.id).toBe('string')
+      expect(cat.label.length, cat.id).toBeGreaterThan(0)
+      expect(typeof cat.desc, cat.id).toBe('string')
+      expect(cat.desc.length, cat.id).toBeGreaterThan(0)
+      expect(REGISTRY[cat.id].length, cat.id).toBeGreaterThan(0)
+    })
+
+    it(`${cat.id}: every gen* export is collected into the registry`, () => {
+      const ns = MODULES[cat.id]
+      const exports_ = Object.keys(ns).filter((k) => /^gen[A-Z]/.test(k) && typeof ns[k] === 'function')
+      const collected = REGISTRY[cat.id].map((f) => f.name)
+      expect(new Set(collected), cat.id).toEqual(new Set(exports_))
+    })
+  }
+
+  it('collected generators all follow the gen* convention', () => {
+    for (const gens of Object.values(REGISTRY)) {
+      for (const gen of gens) expect(gen.name).toMatch(/^gen[A-Z]/)
     }
   })
 })

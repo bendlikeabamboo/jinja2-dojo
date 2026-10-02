@@ -1,13 +1,16 @@
-import { GENERATORS as filters } from './generators/filters.js'
-import { GENERATORS as controlflow } from './generators/controlflow.js'
-import { GENERATORS as tests } from './generators/tests.js'
-import { GENERATORS as globals } from './generators/globals.js'
-import { GENERATORS as whitespace } from './generators/whitespace.js'
+// Single ordered index. Import order drives the home grid and the 1-n drill
+// keys; mixed mode is always the next key. Adding a category = one import +
+// one MODULES entry.
+import * as filtersNs from './generators/filters.js'
+import * as controlflowNs from './generators/controlflow.js'
+import * as testsNs from './generators/tests.js'
+import * as globalsNs from './generators/globals.js'
+import * as whitespaceNs from './generators/whitespace.js'
 
-export const REGISTRY = {
-  filters,
-  controlflow,
-  tests,
-  globals,
-  whitespace,
-}
+import { collectGenerators } from './generators/common.js'
+
+const MODULES = [filtersNs, controlflowNs, testsNs, globalsNs, whitespaceNs]
+
+export const CATEGORIES = MODULES.map((m) => m.CATEGORY)
+
+export const REGISTRY = Object.fromEntries(MODULES.map((m) => [m.CATEGORY.id, collectGenerators(m)]))

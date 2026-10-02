@@ -1,8 +1,10 @@
-import { mcCore, typedCore, nameOf, nounOf, cityOf, words, jinjaTitle } from './common.js'
+import { makeRender, nameOf, nounOf, cityOf, words, jinjaTitle } from './common.js'
 
-const render = (rng, kind, core) => (kind === 'mc' ? mcCore(rng, { ...core, category: 'filters' }) : typedCore({ ...core, category: 'filters' }))
+export const CATEGORY = { id: 'filters', label: 'Filters', desc: 'pipe values through |upper |join |sort and chains' }
 
-function genUpper(rng, kind) {
+const render = makeRender(CATEGORY.id)
+
+export function genUpper(rng, kind) {
   const name = nameOf(rng)
   const expected = name.toUpperCase()
   return render(rng, kind, {
@@ -15,7 +17,7 @@ function genUpper(rng, kind) {
   })
 }
 
-function genLower(rng, kind) {
+export function genLower(rng, kind) {
   const city = cityOf(rng).toUpperCase()
   const expected = city.toLowerCase()
   return render(rng, kind, {
@@ -28,7 +30,7 @@ function genLower(rng, kind) {
   })
 }
 
-function genTitle(rng, kind) {
+export function genTitle(rng, kind) {
   const name = `${nameOf(rng)} ${nounOf(rng)}`
   const expected = jinjaTitle(name)
   return render(rng, kind, {
@@ -45,7 +47,7 @@ function genTitle(rng, kind) {
   })
 }
 
-function genCapitalize(rng, kind) {
+export function genCapitalize(rng, kind) {
   const name = `${nameOf(rng)} ${nounOf(rng)}`
   const expected = name[0].toUpperCase() + name.slice(1)
   return render(rng, kind, {
@@ -58,7 +60,7 @@ function genCapitalize(rng, kind) {
   })
 }
 
-function genDefault(rng, kind) {
+export function genDefault(rng, kind) {
   const name = nameOf(rng)
   const fallback = rng.pick(['anon', 'ghost', 'drift'])
   const expected = fallback
@@ -72,7 +74,7 @@ function genDefault(rng, kind) {
   })
 }
 
-function genLength(rng, kind) {
+export function genLength(rng, kind) {
   const word = nounOf(rng)
   const n = word.length
   return render(rng, kind, {
@@ -85,7 +87,7 @@ function genLength(rng, kind) {
   })
 }
 
-function genJoin(rng, kind) {
+export function genJoin(rng, kind) {
   const tags = words(rng, 3)
   const expected = tags.join(', ')
   return render(rng, kind, {
@@ -98,7 +100,7 @@ function genJoin(rng, kind) {
   })
 }
 
-function genFirstLast(rng, kind) {
+export function genFirstLast(rng, kind) {
   const nums = rng.shuffle([3, 7, 11, 19])
   const wantFirst = rng.chance(0.5)
   const expected = String(wantFirst ? nums[0] : nums[3])
@@ -112,7 +114,7 @@ function genFirstLast(rng, kind) {
   })
 }
 
-function genMinMax(rng, kind) {
+export function genMinMax(rng, kind) {
   const nums = rng.shuffle([4, 17, 9, 23])
   const s = nums.slice().sort((a, b) => a - b)
   const wantMin = rng.chance(0.5)
@@ -127,7 +129,7 @@ function genMinMax(rng, kind) {
   })
 }
 
-function genSum(rng, kind) {
+export function genSum(rng, kind) {
   const nums = [rng.int(2, 9), rng.int(10, 19), rng.int(20, 29)]
   const expected = String(nums[0] + nums[1] + nums[2])
   return render(rng, kind, {
@@ -140,7 +142,7 @@ function genSum(rng, kind) {
   })
 }
 
-function genSort(rng, kind) {
+export function genSort(rng, kind) {
   const items = rng.shuffle(['zen', 'ark', 'moss', 'fern'])
   const expected = items.slice().sort().join(' ')
   return render(rng, kind, {
@@ -153,7 +155,7 @@ function genSort(rng, kind) {
   })
 }
 
-function genReverse(rng, kind) {
+export function genReverse(rng, kind) {
   const word = nounOf(rng)
   const expected = word.split('').reverse().join('')
   return render(rng, kind, {
@@ -166,7 +168,7 @@ function genReverse(rng, kind) {
   })
 }
 
-function genReplace(rng, kind) {
+export function genReplace(rng, kind) {
   const word = nounOf(rng)
   const from = rng.pick(['a', 'o', 'e'])
   const to = rng.pick(['4', '0', '3'])
@@ -182,7 +184,7 @@ function genReplace(rng, kind) {
   })
 }
 
-function genTruncate(rng, kind) {
+export function genTruncate(rng, kind) {
   const sentence = `the ${nounOf(rng)} guards the ${nounOf(rng)} gate`
   const length = 10
   const expected = sentence.slice(0, length - 3) + '...'
@@ -196,7 +198,7 @@ function genTruncate(rng, kind) {
   })
 }
 
-function genRound(rng, kind) {
+export function genRound(rng, kind) {
   // Avoid X.5 values: Python's round is banker's rounding, JS Math.round is not.
   const whole = rng.int(11, 98)
   const frac = rng.pick([1, 2, 3, 4, 6, 7, 8, 9])
@@ -212,7 +214,7 @@ function genRound(rng, kind) {
   })
 }
 
-function genInt(rng, kind) {
+export function genInt(rng, kind) {
   const useFloat = rng.chance(0.5)
   const value = useFloat ? rng.int(11, 98) / 10 : String(rng.int(10, 99))
   const expected = String(Math.trunc(Number(value)))
@@ -226,7 +228,7 @@ function genInt(rng, kind) {
   })
 }
 
-function genTrim(rng, kind) {
+export function genTrim(rng, kind) {
   const word = nounOf(rng)
   const padL = rng.int(1, 3)
   const padR = rng.int(1, 3)
@@ -241,7 +243,7 @@ function genTrim(rng, kind) {
   })
 }
 
-function genChain(rng, kind) {
+export function genChain(rng, kind) {
   const mode = rng.int(1, 3)
   if (mode === 1) {
     const names = rng.shuffle([nameOf(rng), nameOf(rng), nameOf(rng)])
@@ -278,23 +280,3 @@ function genChain(rng, kind) {
   })
 }
 
-export const GENERATORS = [
-  genUpper,
-  genLower,
-  genTitle,
-  genCapitalize,
-  genDefault,
-  genLength,
-  genJoin,
-  genFirstLast,
-  genMinMax,
-  genSum,
-  genSort,
-  genReverse,
-  genReplace,
-  genTruncate,
-  genRound,
-  genInt,
-  genTrim,
-  genChain,
-]

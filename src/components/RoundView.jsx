@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'preact/hooks'
-import { CATEGORIES } from '../data/categories.js'
+import { CATEGORIES } from '../data/registry.js'
 import { round, feedback, roundNo, score, streak, catId, answerMc, submitTyped, nextRound } from '../game/store.js'
 import { ctxLine, markEdges } from '../lib/display.js'
 import { CodeBlock } from './CodeBlock.jsx'

@@ -2,8 +2,7 @@ import { signal } from '@preact/signals'
 import { Rng } from './rng.js'
 import { loadStats, saveStats, clearStats, record, emptyStats } from './stats.js'
 import { generateRound, pickKind, gradeTyped, scoreAnswer } from './engine.js'
-import { CATEGORIES } from '../data/categories.js'
-import { REGISTRY } from '../data/registry.js'
+import { CATEGORIES, REGISTRY } from '../data/registry.js'
 
 // ---- theme ------------------------------------------------------------------
 

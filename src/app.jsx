@@ -1,5 +1,5 @@
 import { useEffect } from 'preact/hooks'
-import { CATEGORIES } from './data/categories.js'
+import { CATEGORIES } from './data/registry.js'
 import {
   view,
   round,
@@ -36,8 +36,8 @@ function useKeyboard() {
         return
       }
       if (view.value === 'home') {
-        if (k >= '1' && k <= '5') startCategory(CATEGORIES[Number(k) - 1].id)
-        else if (k === '6') startCategory('mixed')
+        if (k >= '1' && k <= String(CATEGORIES.length)) startCategory(CATEGORIES[Number(k) - 1].id)
+        else if (k === String(CATEGORIES.length + 1)) startCategory('mixed')
         else if (k === 'r') requestReset()
         else if (k === 'Escape') cancelReset()
         return
@@ -66,7 +66,7 @@ function useKeyboard() {
 function hints() {
   if (view.value === 'home') {
     return [
-      ['1-6', 'drill'],
+      ['1-' + (CATEGORIES.length + 1), 'drill'],
       ['t', 'theme'],
       ['r', 'reset'],
     ]
