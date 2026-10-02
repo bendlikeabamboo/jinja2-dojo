@@ -19,7 +19,7 @@ export function Home() {
           const cs = s.categories[c.id]
           return (
             <li key={c.id}>
-              <button onClick={() => startCategory(c.id)}>
+              <button class="sheet" onClick={() => startCategory(c.id)}>
                 <span class="cat-key">[{i + 1}]</span>
                 <span class="cat-label">{c.label}</span>
                 <span class="cat-desc">
@@ -32,7 +32,7 @@ export function Home() {
           )
         })}
         <li>
-          <button onClick={() => startCategory('mixed')}>
+          <button class="sheet" onClick={() => startCategory('mixed')}>
             <span class="cat-key">[6]</span>
             <span class="cat-label">Mixed</span>
             <span class="cat-desc">

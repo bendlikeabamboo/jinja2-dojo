@@ -155,11 +155,12 @@ button:not(:disabled):hover { border-color: var(--border-strong); }
 .cat-grid .sheet {
   display: block;
   width: 100%;
+  height: 100%;
   padding: 1rem 1.1rem;
 }
 
-.cat-grid .cat-label { font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; }
-.cat-grid .cat-desc { color: var(--muted-foreground); font-size: 0.8125rem; margin-top: 0.25rem; }
+.cat-grid .cat-label { display: block; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; }
+.cat-grid .cat-desc { display: block; color: var(--muted-foreground); font-size: 0.8125rem; line-height: 1.55; margin-top: 0.5rem; }
 .cat-grid .cat-key { float: right; color: var(--muted-foreground); }
 
 .stats-foot {

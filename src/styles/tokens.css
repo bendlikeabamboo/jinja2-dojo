@@ -12,8 +12,8 @@
   --muted-foreground: #818694;
   --border: rgb(249 251 251 / 20%);
   --border-strong: rgb(249 251 251 / 45%);
-  --grid-line: rgb(249 251 251 / 5%);
-  --grid-node: rgb(249 251 251 / 22%);
+  --grid-line: rgb(249 251 251 / 3%);
+  --grid-node: rgb(249 251 251 / 16%);
   --ok: #f9fbfb;
   --miss: #f9fbfb;
   --radius: 0;
@@ -32,6 +32,6 @@
   --muted-foreground: #74747a;
   --border: rgb(9 11 12 / 20%);
   --border-strong: rgb(9 11 12 / 45%);
-  --grid-line: rgb(9 11 12 / 5%);
-  --grid-node: rgb(9 11 12 / 22%);
+  --grid-line: rgb(9 11 12 / 3%);
+  --grid-node: rgb(9 11 12 / 16%);
 }
